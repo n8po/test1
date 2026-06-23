@@ -27,40 +27,25 @@ class AdminController extends Controller
         ));
     }
 
-    public function setujuiPendaftaran($id)
-    {
-        $pendaftaran = Pendaftaran::findOrFail($id);
-        
-        $exists = AnggotaUkm::where('user_id', $pendaftaran->user_id)->exists();
-        if ($exists) {
-            return back()->with('error', 'Mahasiswa sudah terdaftar di UKM lain');
-        }
-
-        $pendaftaran->update(['status' => 'diterima']);
-
-        AnggotaUkm::create([
-            'user_id' => $pendaftaran->user_id,
-            'ukm_id' => $pendaftaran->ukm_id,
-            'tanggal_bergabung' => now(),
-        ]);
-
-        $pendaftaran->user->update(['UKM' => $pendaftaran->ukm->nama]);
-
-        return back()->with('success', 'Pendaftaran disetujui');
-    }
-
-    public function tolakPendaftaran($id)
-    {
-        $pendaftaran = Pendaftaran::findOrFail($id);
-        $pendaftaran->update(['status' => 'ditolak']);
-        return back()->with('success', 'Pendaftaran ditolak');
-    }
-
     public function indexAnggota()
     {
-        $anggotaList = AnggotaUkm::with(['user', 'ukm'])->get();
-        $ukmList = Ukm::all();
-        return view('admin.anggota.index', compact('anggotaList', 'ukmList'));
+        $user = auth()->user();
+
+        // ADMIN: lihat semua anggota
+        if ($user->isAdmin()) {
+            $anggotaList = AnggotaUkm::with(['user', 'ukm'])->get();
+            $ukmList = Ukm::all();
+            return view('admin.anggota.index', compact('anggotaList', 'ukmList'));
+        }
+
+        // ANGGOTA: hanya lihat anggota satu UKM
+        $myUkmId = AnggotaUkm::where('user_id', $user->id)->first()?->ukm_id;
+        $anggotaList = AnggotaUkm::with(['user', 'ukm'])
+            ->when($myUkmId, fn($q) => $q->where('ukm_id', $myUkmId))
+            ->get();
+        $ukmList = Ukm::where('id', $myUkmId)->get();
+
+        return view('anggota.ukm.index', compact('anggotaList', 'ukmList'));
     }
 
     public function createAnggota()
@@ -129,17 +114,14 @@ class AdminController extends Controller
 
     public function destroyAnggota($id)
     {
-        $anggotaData = AnggotaUkm::findOrFail($id);
-        $anggotaData->delete();
+        AnggotaUkm::findOrFail($id)->delete();
         return back()->with('success', 'Anggota berhasil dihapus');
     }
 
     public function exportAnggota($ukmId = null)
     {
         $query = AnggotaUkm::with(['user', 'ukm']);
-        if ($ukmId) {
-            $query->where('ukm_id', $ukmId);
-        }
+        if ($ukmId) $query->where('ukm_id', $ukmId);
         $anggotaList = $query->get();
 
         $headers = [
@@ -150,16 +132,16 @@ class AdminController extends Controller
         $callback = function () use ($anggotaList) {
             $file = fopen('php://output', 'w');
             fputcsv($file, ['No', 'Nama', 'NIM', 'Kelas', 'Prodi', 'Jurusan', 'UKM', 'Tanggal Bergabung']);
-            foreach ($anggotaList as $index => $anggotaItem) {
+            foreach ($anggotaList as $index => $a) {
                 fputcsv($file, [
                     $index + 1,
-                    $anggotaItem->user->nama,
-                    $anggotaItem->user->nim,
-                    $anggotaItem->user->kelas,
-                    $anggotaItem->user->prodi,
-                    $anggotaItem->user->jurusan,
-                    $anggotaItem->ukm->nama,
-                    $anggotaItem->tanggal_bergabung->format('d-m-Y'),
+                    $a->user->nama,
+                    $a->user->nim,
+                    $a->user->kelas,
+                    $a->user->prodi,
+                    $a->user->jurusan,
+                    $a->ukm->nama,
+                    $a->tanggal_bergabung->format('d-m-Y'),
                 ]);
             }
             fclose($file);
@@ -171,9 +153,7 @@ class AdminController extends Controller
     public function cetakAnggota($ukmId = null)
     {
         $query = AnggotaUkm::with(['user', 'ukm']);
-        if ($ukmId) {
-            $query->where('ukm_id', $ukmId);
-        }
+        if ($ukmId) $query->where('ukm_id', $ukmId);
         $anggotaList = $query->get();
         return view('admin.anggota.cetak', compact('anggotaList'));
     }

@@ -6,9 +6,7 @@
 <div class="max-w-2xl mx-auto space-y-6">
     <div class="flex items-center gap-2">
         <a href="{{ route('admin.anggota.index') }}" class="text-muted-foreground hover:text-foreground">
-            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
+            <x-lucide-arrow-left class="size-5" />
         </a>
         <h1 class="text-2xl font-bold tracking-tight">Tambah Anggota</h1>
     </div>

@@ -13,9 +13,7 @@
                     <p class="text-3xl font-bold">{{ $totalMahasiswa }}</p>
                 </div>
                 <div class="rounded-full bg-primary/10 p-3 text-primary">
-                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                    </svg>
+                    <x-lucide-users class="size-5" />
                 </div>
             </x-ui::card-content>
         </x-ui::card>
@@ -27,55 +25,7 @@
                     <p class="text-3xl font-bold">{{ $totalUkm }}</p>
                 </div>
                 <div class="rounded-full bg-emerald-500/10 p-3 text-emerald-600">
-                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                </div>
-            </x-ui::card-content>
-        </x-ui::card>
-
-        <x-ui::card>
-            <x-ui::card-content class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-muted-foreground">Pendaftaran Pending</p>
-                    <p class="text-3xl font-bold">{{ $pendaftaranPending }}</p>
-                </div>
-                <div class="rounded-full bg-amber-500/10 p-3 text-amber-600">
-                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-            </x-ui::card-content>
-        </x-ui::card>
-
-        <x-ui::card>
-            <x-ui::card-content class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-muted-foreground">Anggota Aktif</p>
-                    <p class="text-3xl font-bold">{{ $totalAnggota }}</p>
-                </div>
-                <div class="rounded-full bg-purple-500/10 p-3 text-purple-600">
-                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-            </x-ui::card-content>
-        </x-ui::card>
-    </div>
-
-    {{-- Quick Actions --}}
-    <x-ui::card>
-        <x-ui::card-header>
-            <x-ui::card-title>Menu Utama</x-ui::card-title>
-            <x-ui::card-description>Akses cepat ke fitur utama</x-ui::card-description>
-        </x-ui::card-header>
-        <x-ui::card-content>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="{{ route('mahasiswa.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <div class="rounded-lg bg-primary/10 p-2 text-primary">
-                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                        </svg>
+                    <x-lucide-users class="size-5" />
                     </div>
                     <div>
                         <p class="font-medium">Mahasiswa</p>
@@ -85,9 +35,7 @@
 
                 <a href="{{ route('ukm.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
-                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
+                        <x-lucide-building class="size-5" />
                     </div>
                     <div>
                         <p class="font-medium">Unit Kegiatan</p>
@@ -97,9 +45,7 @@
 
                 <a href="{{ route('pendaftaran.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-amber-500/10 p-2 text-amber-600">
-                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
+                        <x-lucide-file-text class="size-5" />
                     </div>
                     <div>
                         <p class="font-medium">Pendaftaran</p>
@@ -109,9 +55,7 @@
 
                 <a href="{{ route('admin.anggota.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-purple-500/10 p-2 text-purple-600">
-                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                        <x-lucide-user-check class="size-4" />
                     </div>
                     <div>
                         <p class="font-medium">Anggota UKM</p>
