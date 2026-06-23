@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/mahasiswa/export', [MahasiswaController::class, 'exportExcel'])->name('mahasiswa.export');
     Route::get('/mahasiswa/cetak', [MahasiswaController::class, 'cetak'])->name('mahasiswa.cetak');
     Route::post('/mahasiswa/search', [MahasiswaController::class, 'search'])->name('mahasiswa.search');
+    Route::post('/mahasiswa/{id}/approve', [MahasiswaController::class, 'approve'])->name('mahasiswa.approve');
+    Route::post('/mahasiswa/{id}/tolak', [MahasiswaController::class, 'tolak'])->name('mahasiswa.tolak');
     Route::resource('mahasiswa', MahasiswaController::class)->except(['show']);
 
     // UKM Routes

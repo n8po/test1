@@ -50,7 +50,10 @@ class AdminController extends Controller
 
     public function createAnggota()
     {
-        $mahasiswaList = User::where('Role', '!=', 'administrator')->get();
+        $mahasiswaList = User::where('Role', '!=', 'administrator')
+            ->where('status', 'approved')
+            ->doesntHave('anggotaAktif')
+            ->get();
         $ukmList = Ukm::all();
         return view('admin.anggota.create', compact('mahasiswaList', 'ukmList'));
     }

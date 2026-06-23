@@ -1,10 +1,4 @@
 <?php
-/**
- * Module: MahasiswaController
- * Created: 2026-06-23
- * Author: System
- * Synopsis: Controller untuk manajemen data mahasiswa
- */
 
 namespace App\Http\Controllers;
 
@@ -42,11 +36,11 @@ class MahasiswaController extends Controller
             'jurusan' => $request->jurusan,
             'password' => bcrypt('password123'),
             'Role' => 'anggota',
+            'status' => 'pending',
             'UKM' => 'Belum Memilih',
-            'email' => $request->nim . '@poliban.ac.id',
         ]);
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan. Status: Pending — perlu disetujui admin sebelum bisa daftar UKM.');
     }
 
     public function edit($id)
@@ -58,7 +52,7 @@ class MahasiswaController extends Controller
     public function update(Request $request, $id)
     {
         $mahasiswa = User::findOrFail($id);
-        
+
         $request->validate([
             'nama' => 'required',
             'nim' => 'required|unique:users,nim,' . $id,
@@ -73,8 +67,7 @@ class MahasiswaController extends Controller
 
     public function destroy($id)
     {
-        $mahasiswa = User::findOrFail($id);
-        $mahasiswa->delete();
+        User::findOrFail($id)->delete();
         return back()->with('success', 'Data mahasiswa berhasil dihapus');
     }
 
@@ -88,8 +81,24 @@ class MahasiswaController extends Controller
                     ->orWhere('kelas', 'like', "%$keyword%");
             })
             ->get();
-            
+
         return view('mahasiswa.index', compact('mahasiswaList'));
+    }
+
+    // Approve mahasiswa
+    public function approve($id)
+    {
+        $mahasiswa = User::findOrFail($id);
+        $mahasiswa->update(['status' => 'approved']);
+        return back()->with('success', "Mahasiswa {$mahasiswa->nama} berhasil disetujui");
+    }
+
+    // Tolak mahasiswa
+    public function tolak($id)
+    {
+        $mahasiswa = User::findOrFail($id);
+        $mahasiswa->update(['status' => 'ditolak']);
+        return back()->with('success', "Mahasiswa {$mahasiswa->nama} ditolak");
     }
 
     public function exportExcel()
@@ -102,9 +111,9 @@ class MahasiswaController extends Controller
 
         $callback = function () use ($mahasiswaList) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['No', 'NIM', 'Nama', 'Kelas', 'Prodi', 'Jurusan', 'UKM']);
+            fputcsv($file, ['No', 'NIM', 'Nama', 'Kelas', 'Prodi', 'Jurusan', 'Status', 'UKM']);
             foreach ($mahasiswaList as $index => $m) {
-                fputcsv($file, [$index + 1, $m->nim, $m->nama, $m->kelas, $m->prodi, $m->jurusan, $m->UKM]);
+                fputcsv($file, [$index + 1, $m->nim, $m->nama, $m->kelas, $m->prodi, $m->jurusan, $m->status, $m->UKM]);
             }
             fclose($file);
         };

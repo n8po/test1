@@ -18,6 +18,7 @@ class User extends Authenticatable
         'prodi',
         'jurusan',
         'Role',
+        'status',
         'UKM',
         'password'
     ];

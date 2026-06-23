@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Data Mahasiswa')
-
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -47,33 +45,55 @@
                         <x-ui::table-head>Nama</x-ui::table-head>
                         <x-ui::table-head>Kelas</x-ui::table-head>
                         <x-ui::table-head>Prodi</x-ui::table-head>
-                        <x-ui::table-head>Jurusan</x-ui::table-head>
-                        <x-ui::table-head>UKM</x-ui::table-head>
+                        <x-ui::table-head>Status</x-ui::table-head>
                         <x-ui::table-head>Aksi</x-ui::table-head>
                     </x-ui::table-row>
                 </x-ui::table-header>
                 <x-ui::table-body>
                     @foreach($mahasiswaList as $index => $m)
-                    <x-ui::table-row>
+                    <x-ui::table-row class="{{ $m->status == 'approved' ? 'bg-emerald-50/30' : ($m->status == 'ditolak' ? 'bg-red-50/30' : '') }}">
                         <x-ui::table-cell>{{ $index + 1 }}</x-ui::table-cell>
                         <x-ui::table-cell class="font-mono">{{ $m->nim }}</x-ui::table-cell>
                         <x-ui::table-cell>{{ $m->nama }}</x-ui::table-cell>
                         <x-ui::table-cell>{{ $m->kelas }}</x-ui::table-cell>
                         <x-ui::table-cell>{{ $m->prodi }}</x-ui::table-cell>
-                        <x-ui::table-cell>{{ $m->jurusan }}</x-ui::table-cell>
                         <x-ui::table-cell>
-                            @if($m->UKM === 'Belum Memilih')
-                                <x-ui::badge variant="outline">Belum Memilih</x-ui::badge>
+                            @if($m->status == 'pending')
+                                <x-ui::badge variant="outline">Pending</x-ui::badge>
+                            @elseif($m->status == 'approved')
+                                <x-ui::badge variant="secondary">Disetujui</x-ui::badge>
                             @else
-                                <x-ui::badge variant="secondary">{{ $m->UKM }}</x-ui::badge>
+                                <x-ui::badge variant="destructive">Ditolak</x-ui::badge>
                             @endif
                         </x-ui::table-cell>
                         <x-ui::table-cell>
                             <div class="flex gap-2">
-                                <x-ui::button href="{{ route('mahasiswa.edit', $m->id) }}" size="xs" variant="outline">Edit</x-ui::button>
-                                <form method="POST" action="{{ route('mahasiswa.destroy', $m->id) }}" onsubmit="return confirm('Yakin hapus?')">
+                                <x-ui::button href="{{ route('mahasiswa.edit', $m->id) }}" size="xs" variant="outline">
+                                    <x-lucide-pencil class="size-3.5" />
+                                </x-ui::button>
+
+                                @if($m->status == 'pending')
+                                <form method="POST" action="{{ route('mahasiswa.approve', $m->id) }}" class="inline">
+                                    @csrf
+                                    <x-ui::button type="submit" size="xs" variant="secondary">
+                                        <x-lucide-check class="size-3.5" />
+                                        Setujui
+                                    </x-ui::button>
+                                </form>
+                                <form method="POST" action="{{ route('mahasiswa.tolak', $m->id) }}" class="inline">
+                                    @csrf
+                                    <x-ui::button type="submit" size="xs" variant="destructive">
+                                        <x-lucide-x class="size-3.5" />
+                                        Tolak
+                                    </x-ui::button>
+                                </form>
+                                @endif
+
+                                <form method="POST" action="{{ route('mahasiswa.destroy', $m->id) }}" class="inline" onsubmit="return confirm('Yakin hapus?')">
                                     @csrf @method('DELETE')
-                                    <x-ui::button type="submit" size="xs" variant="destructive">Hapus</x-ui::button>
+                                    <x-ui::button type="submit" size="xs" variant="destructive">
+                                        <x-lucide-trash-2 class="size-3.5" />
+                                    </x-ui::button>
                                 </form>
                             </div>
                         </x-ui::table-cell>

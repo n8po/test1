@@ -41,19 +41,19 @@ class DatabaseSeeder extends Seeder
 
         $mahasiswaList = [
             // UKM Teater (ukm_id=1)
-            ['username' => 'ketua1', 'nama' => 'Ahmad Fauzi', 'nim' => '2210010001', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'ketua', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
-            ['username' => 'sekretaris1', 'nama' => 'Rina Melati', 'nim' => '2210010011', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'sekretaris', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
-            ['username' => 'anggota1', 'nama' => 'Doni Prasetyo', 'nim' => '2210010021', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'anggota', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
+            ['username' => 'ketua1', 'nama' => 'Ahmad Fauzi', 'nim' => '2210010001', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'ketua', 'status' => 'approved', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
+            ['username' => 'sekretaris1', 'nama' => 'Rina Melati', 'nim' => '2210010011', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'sekretaris', 'status' => 'approved', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
+            ['username' => 'anggota1', 'nama' => 'Doni Prasetyo', 'nim' => '2210010021', 'kelas' => '2A', 'prodi' => 'Teknik Informatika', 'jurusan' => 'Teknik Elektro', 'Role' => 'anggota', 'status' => 'approved', 'UKM' => 'UKM Teater Wasi Putih', 'ukm_id' => 1],
 
             // UKM Music (ukm_id=2)
-            ['username' => 'ketua2', 'nama' => 'Siti Nurhaliza', 'nim' => '2210010002', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'ketua', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
-            ['username' => 'sekretaris2', 'nama' => 'Joko Susilo', 'nim' => '2210010012', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'sekretaris', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
-            ['username' => 'anggota2', 'nama' => 'Mega Sari', 'nim' => '2210010022', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'anggota', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
+            ['username' => 'ketua2', 'nama' => 'Siti Nurhaliza', 'nim' => '2210010002', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'ketua', 'status' => 'approved', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
+            ['username' => 'sekretaris2', 'nama' => 'Joko Susilo', 'nim' => '2210010012', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'sekretaris', 'status' => 'approved', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
+            ['username' => 'anggota2', 'nama' => 'Mega Sari', 'nim' => '2210010022', 'kelas' => '1A', 'prodi' => 'Sistem Informasi', 'jurusan' => 'Teknik Elektro', 'Role' => 'anggota', 'status' => 'approved', 'UKM' => 'UKM Music Generation', 'ukm_id' => 2],
 
             // UKM Basket (ukm_id=3)
-            ['username' => 'ketua3', 'nama' => 'Budi Santoso', 'nim' => '2210010003', 'kelas' => '1B', 'prodi' => 'Manajemen', 'jurusan' => 'Ekonomi', 'Role' => 'ketua', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
-            ['username' => 'sekretaris3', 'nama' => 'Dewi Lestari', 'nim' => '2210010013', 'kelas' => '1B', 'prodi' => 'Manajemen', 'jurusan' => 'Ekonomi', 'Role' => 'sekretaris', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
-            ['username' => 'anggota3', 'nama' => 'Rudi Hermawan', 'nim' => '2210010023', 'kelas' => '2B', 'prodi' => 'Akuntansi', 'jurusan' => 'Ekonomi', 'Role' => 'anggota', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
+            ['username' => 'ketua3', 'nama' => 'Budi Santoso', 'nim' => '2210010003', 'kelas' => '1B', 'prodi' => 'Manajemen', 'jurusan' => 'Ekonomi', 'Role' => 'ketua', 'status' => 'approved', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
+            ['username' => 'sekretaris3', 'nama' => 'Dewi Lestari', 'nim' => '2210010013', 'kelas' => '1B', 'prodi' => 'Manajemen', 'jurusan' => 'Ekonomi', 'Role' => 'sekretaris', 'status' => 'approved', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
+            ['username' => 'anggota3', 'nama' => 'Rudi Hermawan', 'nim' => '2210010023', 'kelas' => '2B', 'prodi' => 'Akuntansi', 'jurusan' => 'Ekonomi', 'Role' => 'anggota', 'status' => 'approved', 'UKM' => 'UKM Basket', 'ukm_id' => 3],
         ];
 
         foreach ($mahasiswaList as $mhs) {
