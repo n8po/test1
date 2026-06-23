@@ -50,31 +50,30 @@ class AdminController extends Controller
 
     public function createAnggota()
     {
+        $mahasiswaList = User::where('Role', '!=', 'administrator')
+            ->whereDoesntHave('anggotaAktif')
+            ->get();
         $ukmList = Ukm::all();
-        return view('admin.anggota.create', compact('ukmList'));
+        return view('admin.anggota.create', compact('mahasiswaList', 'ukmList'));
     }
 
     public function storeAnggota(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
-            'nim' => 'required|unique:users',
-            'kelas' => 'required',
-            'prodi' => 'required',
-            'jurusan' => 'required',
+            'user_id' => 'required|exists:users,id',
             'ukm_id' => 'required|exists:ukms,id',
         ]);
 
-        $user = User::create([
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'kelas' => $request->kelas,
-            'prodi' => $request->prodi,
-            'jurusan' => $request->jurusan,
-            'password' => bcrypt('password'),
+        $user = User::findOrFail($request->user_id);
+
+        // Cek belum jadi anggota
+        if ($user->anggotaAktif) {
+            return back()->with('error', 'User sudah terdaftar di UKM lain');
+        }
+
+        $user->update([
             'Role' => 'anggota',
             'UKM' => Ukm::find($request->ukm_id)->nama,
-            'email' => $request->nim . '@poliban.ac.id',
         ]);
 
         AnggotaUkm::create([

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Tambah Anggota')
-
 @section('content')
 <div class="max-w-2xl mx-auto space-y-6">
     <div class="flex items-center gap-2">
@@ -14,46 +12,33 @@
     <x-ui::card>
         <x-ui::card-header>
             <x-ui::card-title>Form Tambah Anggota</x-ui::card-title>
-            <x-ui::card-description>Tambah anggota UKM baru</x-ui::card-description>
+            <x-ui::card-description>Pilih mahasiswa yang sudah terdaftar untuk ditambahkan ke UKM</x-ui::card-description>
         </x-ui::card-header>
         <x-ui::card-content>
             <form method="POST" action="{{ route('admin.anggota.store') }}" class="space-y-4">
                 @csrf
 
-                <div class="grid grid-cols-2 gap-4">
-                    <x-ui::field>
-                        <x-ui::field-label for="nama">Nama Lengkap</x-ui::field-label>
-                        <x-ui::input id="nama" type="text" name="nama" value="{{ old('nama') }}" required />
-                    </x-ui::field>
-
-                    <x-ui::field>
-                        <x-ui::field-label for="nim">NIM</x-ui::field-label>
-                        <x-ui::input id="nim" type="text" name="nim" value="{{ old('nim') }}" required />
-                    </x-ui::field>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <x-ui::field>
-                        <x-ui::field-label for="kelas">Kelas</x-ui::field-label>
-                        <x-ui::input id="kelas" type="text" name="kelas" value="{{ old('kelas') }}" required />
-                    </x-ui::field>
-
-                    <x-ui::field>
-                        <x-ui::field-label for="prodi">Prodi</x-ui::field-label>
-                        <x-ui::input id="prodi" type="text" name="prodi" value="{{ old('prodi') }}" required />
-                    </x-ui::field>
-                </div>
-
                 <x-ui::field>
-                    <x-ui::field-label for="jurusan">Jurusan</x-ui::field-label>
-                    <x-ui::input id="jurusan" type="text" name="jurusan" value="{{ old('jurusan') }}" required />
+                    <x-ui::field-label for="user_id">Pilih Mahasiswa</x-ui::field-label>
+                    <x-ui::select id="user_id" name="user_id" native required>
+                        <option value="">-- Pilih Mahasiswa --</option>
+                        @foreach($mahasiswaList as $m)
+                        <option value="{{ $m->id }}" {{ old('user_id') == $m->id ? 'selected' : '' }}>
+                            {{ $m->nim }} - {{ $m->nama }} ({{ $m->kelas }}/{{ $m->prodi }})
+                        </option>
+                        @endforeach
+                    </x-ui::select>
+                    @if($mahasiswaList->isEmpty())
+                    <p class="text-xs text-muted-foreground mt-1">Semua mahasiswa sudah terdaftar di UKM</p>
+                    @endif
                 </x-ui::field>
 
                 <x-ui::field>
                     <x-ui::field-label for="ukm_id">UKM</x-ui::field-label>
                     <x-ui::select id="ukm_id" name="ukm_id" native required>
+                        <option value="">-- Pilih UKM --</option>
                         @foreach($ukmList as $ukm)
-                        <option value="{{ $ukm->id }}">{{ $ukm->nama }}</option>
+                        <option value="{{ $ukm->id }}" {{ old('ukm_id') == $ukm->id ? 'selected' : '' }}>{{ $ukm->nama }}</option>
                         @endforeach
                     </x-ui::select>
                 </x-ui::field>
