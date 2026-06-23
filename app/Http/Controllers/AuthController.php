@@ -3,22 +3,16 @@
  * Module: AuthController
  * Created: 2026-06-23
  * Author: Raditya Natha Azra
- * Synopsis: Controller untuk autentikasi pengguna (login, register, logout)
+ * Synopsis: Controller untuk autentikasi pengguna (login, logout)
  * 
  * Functions:
  *   - showLogin() : view -> tampilkan form login
  *   - login(Request) : redirect -> proses login
- *   - showRegister() : view -> tampilkan form register
- *   - register(Request) : redirect -> proses registrasi
  *   - logout(Request) : redirect -> proses logout
  * 
  * Input Parameters:
- *   - nim : string -> NIM pengguna
+ *   - username : string -> username pengguna
  *   - password : string -> kata sandi
- *   - nama : string -> nama lengkap
- *   - kelas : string -> kelas
- *   - prodi : string -> program studi
- *   - jurusan : string -> jurusan
  * 
  * Return Values:
  *   - 0 : gagal
@@ -42,7 +36,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'nim' => 'required',
+            'username' => 'required',
             'password' => 'required',
         ]);
 
@@ -52,36 +46,7 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard');
         }
 
-        return back()->withErrors(['nim' => 'NIM atau password salah']);
-    }
-
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
-
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required',
-            'nim' => 'required|unique:users',
-            'kelas' => 'required',
-            'prodi' => 'required',
-            'jurusan' => 'required',
-            'password' => 'required|confirmed|min:6',
-        ]);
-
-        User::create([
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'kelas' => $request->kelas,
-            'prodi' => $request->prodi,
-            'jurusan' => $request->jurusan,
-            'password' => Hash::make($request->password),
-            'Role' => 'anggota',
-        ]);
-
-        return redirect('/login')->with('success', 'Registrasi berhasil, silakan login');
+        return back()->withErrors(['username' => 'Username atau password salah']);
     }
 
     public function logout(Request $request)

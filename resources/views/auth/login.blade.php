@@ -55,67 +55,46 @@
                 UKM Poliban
             </a>
 
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold tracking-tight">Selamat Datang</h1>
-                <p class="text-gray-500 mt-1 text-sm">Login untuk mengakses sistem UKM Poliban.</p>
-            </div>
+            <x-ui:card class="mb-6">
+                <x-ui:card-header>
+                    <x-ui:card-title>Selamat Datang</x-ui:card-title>
+                    <x-ui:card-description>Login untuk mengakses sistem UKM Poliban.</x-ui:card-description>
+                </x-ui:card-header>
+                <x-ui:card-content>
+                    @if(session('success'))
+                        <x-ui:alert variant="success" class="mb-4">
+                            <x-ui:alert-description>{{ session('success') }}</x-ui:alert-description>
+                        </x-ui:alert>
+                    @endif
 
-            @if(session('success'))
-            <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg">
-                {{ session('success') }}
-            </div>
-            @endif
+                    @if($errors->any())
+                        <x-ui:alert variant="destructive" class="mb-4">
+                            <x-ui:alert-description>
+                                @foreach($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                                @endforeach
+                            </x-ui:alert-description>
+                        </x-ui:alert>
+                    @endif
 
-            @if($errors->any())
-            <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
-                @foreach($errors->all() as $error)
-                <p>{{ $error }}</p>
-                @endforeach
-            </div>
-            @endif
+                    <form method="POST" action="{{ route('login') }}" class="grid gap-4">
+                        @csrf
+                        <x-ui:field>
+                            <x-ui:field-label for="username">Username</x-ui:field-label>
+                            <x-ui:input id="username" type="text" name="username" placeholder="Masukkan username" value="{{ old('username') }}" required />
+                        </x-ui:field>
 
-            <form method="POST" action="{{ route('login') }}" class="grid gap-4">
-                @csrf
-                <div class="grid gap-2">
-                    <label for="nim" class="text-sm font-medium">NIM</label>
-                    <input 
-                        id="nim" 
-                        type="text" 
-                        name="nim" 
-                        placeholder="Masukkan NIM"
-                        value="{{ old('nim') }}"
-                        required 
-                        class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                </div>
-                <div class="grid gap-2">
-                    <label for="password" class="text-sm font-medium">Password</label>
-                    <input 
-                        id="password" 
-                        type="password" 
-                        name="password" 
-                        placeholder="Masukkan password"
-                        required 
-                        class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                </div>
-                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2">
-                    Login
-                </button>
-            </form>
+                        <x-ui:field>
+                            <x-ui:field-label for="password">Password</x-ui:field-label>
+                            <x-ui:input id="password" type="password" name="password" placeholder="Masukkan password" required />
+                        </x-ui:field>
 
-            <div class="my-6 flex items-center gap-3">
-                <hr class="flex-1 border-gray-200">
-                <span class="text-gray-500 text-xs uppercase">atau</span>
-                <hr class="flex-1 border-gray-200">
-            </div>
+                        <x-ui:button type="submit" class="w-full">Login</x-ui:button>
+                    </form>
+                </x-ui:card-content>
+            </x-ui:card>
 
-            <p class="text-center text-sm text-gray-600">
-                Belum punya akun? 
-                <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-medium">Daftar disini</a>
-            </p>
-
-            <p class="text-gray-400 mt-8 text-center text-xs">Sistem Manajemen UKM Poliban &copy; 2026</p>
+            <p class="text-muted-foreground mt-8 text-center text-xs">Sistem Manajemen UKM Poliban &copy; {{ date('Y') }}</p>
         </div>
     </div>
 </div>

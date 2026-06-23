@@ -16,11 +16,11 @@
                 
                 <x-ui:field>
                     <x-ui:field-label>UKM</x-ui:field-label>
-                    <select name="ukm" required class="w-full p-2 border rounded">
+                    <x-ui:select name="ukm" native required>
                         @foreach($ukms as $ukm)
                         <option value="{{ $ukm->nama }}">{{ $ukm->nama }}</option>
                         @endforeach
-                    </select>
+                    </x-ui:select>
                 </x-ui:field>
                 
                 <x-ui:field>

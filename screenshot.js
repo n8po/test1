@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
-const SCREENSHOT_DIR = 'C:\\Project\\latihan\\ukm_poliban\\screenshots';
+const SCREENSHOT_DIR = path.join(__dirname, 'screenshots');
 const BASE_URL = 'http://localhost:8000';
 
 async function takeScreenshot(page, name) {
@@ -16,8 +16,8 @@ async function takeScreenshot(page, name) {
 }
 
 (async () => {
-    const browser = await chromium.launch({ headless: false });
-    const context = await browser.newContext();
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });
     const page = await context.newPage();
 
     const screenshots = [];
@@ -26,82 +26,80 @@ async function takeScreenshot(page, name) {
         console.log('\n=== MEMULAI SCREENSHOT OTOMATIS ===\n');
 
         // Tampilan 1: Halaman Login
-        console.log('1. Mengambil screenshot halaman login...');
+        console.log('1. Halaman login...');
         await page.goto(`${BASE_URL}/login`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan1_login');
 
-        // Tampilan 2: Proses Login
-        console.log('2. Melakukan login...');
-        await page.fill('input[name="nim"]', 'ADMIN001');
+        // Tampilan 2: Form Login diisi
+        console.log('2. Form login...');
+        await page.fill('input[name="username"]', 'admin');
         await page.fill('input[name="password"]', 'admin123');
         await takeScreenshot(page, 'tampilan2_form_login');
-        await page.click('button[type="submit"]');
-        await page.waitForTimeout(3000);
 
-        // Tampilan 3: Dashboard Admin
-        console.log('3. Mengambil screenshot dashboard admin...');
-        await page.waitForURL('**/admin/dashboard', { timeout: 10000 }).catch(() => {
-            console.log('URL tidak redirect otomatis, navigasi manual...');
-            page.goto(`${BASE_URL}/admin/dashboard`);
+        // Tampilan 3: Dashboard
+        console.log('3. Dashboard...');
+        await page.click('button[type="submit"]');
+        await page.waitForURL('**/dashboard', { timeout: 10000 }).catch(async () => {
+            await page.goto(`${BASE_URL}/dashboard`);
         });
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan3_dashboard');
 
         // Tampilan 4: Menu Mahasiswa
-        console.log('4. Mengambil screenshot menu mahasiswa...');
+        console.log('4. Menu Mahasiswa...');
         await page.goto(`${BASE_URL}/mahasiswa`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan4_mahasiswa');
 
         // Tampilan 5: Tambah Mahasiswa
-        console.log('5. Mengambil screenshot form tambah mahasiswa...');
+        console.log('5. Tambah Mahasiswa...');
         await page.goto(`${BASE_URL}/mahasiswa/create`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan5_tambah_mahasiswa');
 
         // Tampilan 6: Menu UKM
-        console.log('6. Mengambil screenshot menu UKM...');
+        console.log('6. Menu UKM...');
         await page.goto(`${BASE_URL}/ukm`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan6_ukm');
 
         // Tampilan 7: Tambah UKM
-        console.log('7. Mengambil screenshot form tambah UKM...');
+        console.log('7. Tambah UKM...');
         await page.goto(`${BASE_URL}/ukm/create`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan7_tambah_ukm');
 
         // Tampilan 8: Menu Pendaftaran
-        console.log('8. Mengambil screenshot menu pendaftaran...');
+        console.log('8. Menu Pendaftaran...');
         await page.goto(`${BASE_URL}/pendaftaran`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan8_pendaftaran');
 
-        // Tampilan 9: Menu Anggota UKM
-        console.log('9. Mengambil screenshot menu anggota UKM...');
+        // Tampilan 9: Anggota UKM
+        console.log('9. Menu Anggota UKM...');
         await page.goto(`${BASE_URL}/admin/anggota`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan9_anggota_ukm');
 
-        // Tampilan 10: Form Tambah Anggota
-        console.log('10. Mengambil screenshot form tambah anggota...');
+        // Tampilan 10: Tambah Anggota
+        console.log('10. Tambah Anggota...');
         await page.goto(`${BASE_URL}/admin/anggota/create`);
         await page.waitForTimeout(2000);
         await takeScreenshot(page, 'tampilan10_tambah_anggota');
 
-        // Tampilan 11: Fitur Pencarian
-        console.log('11. Mengambil screenshot fitur pencarian...');
+        // Tampilan 11: Pencarian
+        console.log('11. Pencarian...');
         await page.goto(`${BASE_URL}/mahasiswa`);
         await page.waitForTimeout(1000);
         const searchInput = await page.$('input[name="keyword"]');
         if (searchInput) {
-            await searchInput.fill('Budi');
-            await takeScreenshot(page, 'tampilan11_pencarian');
+            await searchInput.fill('admin');
         }
+        await takeScreenshot(page, 'tampilan11_pencarian');
 
-        // Tampilan 12: Halaman Cetak
-        console.log('12. Mengambil screenshot halaman cetak...');
+        // Tampilan 12: Cetak
+        console.log('12. Halaman cetak...');
         const page2 = await context.newPage();
         await page2.goto(`${BASE_URL}/mahasiswa/cetak`);
         await page2.waitForTimeout(2000);
