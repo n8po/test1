@@ -1,0 +1,43 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Daftar Kegiatan</h2>
+        <x-ui:button href="{{ route('kegiatan.create') }}">Tambah Kegiatan</x-ui:button>
+    </div>
+
+    <x-ui:card>
+        <x-ui:card-content>
+            <x-ui:table>
+                <x-ui:table-header>
+                    <x-ui:table-row>
+                        <x-ui:table-head>Nama Kegiatan</x-ui:table-head>
+                        <x-ui:table-head>UKM</x-ui:table-head>
+                        <x-ui:table-head>Tanggal</x-ui:table-head>
+                        <x-ui:table-head>Aksi</x-ui:table-head>
+                    </x-ui:table-row>
+                </x-ui:table-header>
+                <x-ui:table-body>
+                    @foreach($kegiatans as $k)
+                    <x-ui:table-row>
+                        <x-ui:table-cell>{{ $k->nama_kegiatan }}</x-ui:table-cell>
+                        <x-ui:table-cell>{{ $k->UKM }}</x-ui:table-cell>
+                        <x-ui:table-cell>{{ $k->tanggal->format('d-m-Y') }}</x-ui:table-cell>
+                        <x-ui:table-cell>
+                            <div class="flex gap-2">
+                                <x-ui:button href="{{ route('kegiatan.edit', $k->id) }}" size="xs" variant="outline">Edit</x-ui:button>
+                                <form method="POST" action="{{ route('kegiatan.destroy', $k->id) }}" onsubmit="return confirm('Yakin hapus?')">
+                                    @csrf @method('DELETE')
+                                    <x-ui:button type="submit" size="xs" variant="destructive">Hapus</x-ui:button>
+                                </form>
+                            </div>
+                        </x-ui:table-cell>
+                    </x-ui:table-row>
+                    @endforeach
+                </x-ui:table-body>
+            </x-ui:table>
+        </x-ui:card-content>
+    </x-ui:card>
+</div>
+@endsection
