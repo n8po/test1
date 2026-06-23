@@ -1,19 +1,4 @@
 <?php
-/**
- * Module: User Model
- * Created: 2026-06-23
- * Author: System
- * Synopsis: Model untuk data pengguna (mahasiswa dan administrator)
- * 
- * Functions:
- *   - anggotaUkm() : hasMany -> relasi ke AnggotaUkm
- *   - pendaftaran() : hasMany -> relasi ke Pendaftaran
- *   - isAdmin() : bool -> cek role administrator
- * 
- * Global Variables Accessed:
- *   - $fillable (array) - field yang dapat diisi
- *   - $hidden (array) - field yang disembunyikan
- */
 
 namespace App\Models;
 
@@ -59,8 +44,33 @@ class User extends Authenticatable
         return $this->hasMany(Pendaftaran::class);
     }
 
+    public function anggotaAktif()
+    {
+        return $this->hasOne(AnggotaUkm::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->Role === 'administrator';
+    }
+
+    public function isKetua(): bool
+    {
+        return $this->Role === 'ketua';
+    }
+
+    public function isSekretaris(): bool
+    {
+        return $this->Role === 'sekretaris';
+    }
+
+    public function isPengurus(): bool
+    {
+        return $this->isKetua() || $this->isSekretaris();
+    }
+
+    public function getUkmId(): ?int
+    {
+        return $this->anggotaAktif?->ukm_id;
     }
 }

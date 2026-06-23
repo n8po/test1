@@ -21,7 +21,13 @@
                                     </div>
                                     <div class="grid flex-1 text-left text-sm leading-tight">
                                         <span class="truncate font-semibold">UKM Poliban</span>
-                                        <span class="truncate text-xs">{{ auth()->user()->isAdmin() ? 'Administrator' : 'Anggota' }}</span>
+                                        <span class="truncate text-xs">
+                                            @if(auth()->user()->isAdmin()) Administrator
+                                            @elseif(auth()->user()->isKetua()) Ketua UKM
+                                            @elseif(auth()->user()->isSekretaris()) Sekretaris UKM
+                                            @else Anggota
+                                            @endif
+                                        </span>
                                     </div>
                                 </x-ui::sidebar-menu-button>
                             </x-ui::sidebar-menu-item>
