@@ -122,6 +122,27 @@ class AdminController extends Controller
             return back()->with('error', 'User sudah terdaftar di UKM lain');
         }
 
+        $currentUser = auth()->user();
+
+        // Pengurus: buat Pendaftaran (pending) — admin yg approve
+        if ($currentUser->isPengurus()) {
+            $existing = Pendaftaran::where('user_id', $user->id)
+                ->where('ukm_id', $request->ukm_id)
+                ->where('status', 'pending')
+                ->exists();
+            if ($existing) {
+                return back()->with('error', 'Mahasiswa ini sudah pernah didaftarkan dan menunggu persetujuan admin.');
+            }
+
+            Pendaftaran::create([
+                'user_id' => $user->id,
+                'ukm_id' => $request->ukm_id,
+                'status' => 'pending',
+            ]);
+
+            return redirect()->route('ukm.index')->with('success', 'Anggota berhasil didaftarkan. Menunggu persetujuan admin.');
+        }
+
         // Cek constraint: hanya 1 ketua dan 1 sekretaris per UKM
         if (in_array($request->jabatan, ['ketua', 'sekretaris'])) {
             $exists = AnggotaUkm::where('ukm_id', $request->ukm_id)

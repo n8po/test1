@@ -19,7 +19,7 @@
                     </x-ui::table-row>
                 </x-ui::table-header>
                 <x-ui::table-body>
-                    @foreach($kegiatans as $k)
+                    @foreach($kegiatanList as $k)
                     <x-ui::table-row>
                         <x-ui::table-cell>{{ $k->nama_kegiatan }}</x-ui::table-cell>
                         <x-ui::table-cell>{{ $k->UKM }}</x-ui::table-cell>

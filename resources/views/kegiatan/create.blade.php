@@ -17,7 +17,7 @@
                 <x-ui::field>
                     <x-ui::field-label>UKM</x-ui::field-label>
                     <x-ui::select name="ukm" native required>
-                        @foreach($ukms as $ukm)
+                        @foreach($ukmList as $ukm)
                         <option value="{{ $ukm->nama }}">{{ $ukm->nama }}</option>
                         @endforeach
                     </x-ui::select>

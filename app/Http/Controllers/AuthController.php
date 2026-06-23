@@ -42,6 +42,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials))
         {
+            $user = Auth::user();
+            if ($user->Role === 'anggota') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors(['email' => 'Akun anggota tidak memiliki hak akses. Silakan hubungi admin.']);
+            }
             $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }

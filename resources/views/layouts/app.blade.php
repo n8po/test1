@@ -29,19 +29,12 @@
                                 </x-ui::sidebar-menu-item>
                                 @endif
 
-                                {{-- Mahasiswa (Admin) or Anggota UKM Saya (Mahasiswa/Pengurus) --}}
+                                {{-- Mahasiswa (Admin Only) --}}
                                 @if(auth()->user()->isAdmin())
                                 <x-ui::sidebar-menu-item>
                                     <x-ui::sidebar-menu-button as="a" href="{{ route('mahasiswa.index') }}" class="{{ request()->is('mahasiswa*') ? 'bg-sidebar-accent text-sidebar-accent-foreground' : '' }}">
                                         <x-lucide-users class="size-4" />
                                         <span>Mahasiswa</span>
-                                    </x-ui::sidebar-menu-button>
-                                </x-ui::sidebar-menu-item>
-                                @else
-                                <x-ui::sidebar-menu-item>
-                                    <x-ui::sidebar-menu-button as="a" href="{{ route('mahasiswa.index') }}" class="{{ request()->is('mahasiswa*') ? 'bg-sidebar-accent text-sidebar-accent-foreground' : '' }}">
-                                        <x-lucide-users class="size-4" />
-                                        <span>Anggota UKM Saya</span>
                                     </x-ui::sidebar-menu-button>
                                 </x-ui::sidebar-menu-item>
                                 @endif

@@ -40,24 +40,28 @@ class MahasiswaController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->isAdmin()) {
-            $mahasiswaList = User::where('Role', '!=', 'administrator')->paginate(20);
-        } else {
-            $ukmId = auth()->user()->getUkmId();
-            $mahasiswaList = User::whereHas('anggotaUkm', function ($query) use ($ukmId) {
-                $query->where('ukm_id', $ukmId);
-            })->paginate(20);
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
         }
+
+        $mahasiswaList = User::where('Role', '!=', 'administrator')->paginate(20);
         return view('mahasiswa.index', compact('mahasiswaList'));
     }
 
     public function create()
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
         return view('mahasiswa.create');
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $request->validate([
             'nama' => 'required',
             'nim' => 'required|unique:users',
@@ -68,7 +72,7 @@ class MahasiswaController extends Controller
 
         $status = $request->input('status') === 'approved' ? 'approved' : 'pending';
 
-        $user = User::create([
+        User::create([
             'nama' => $request->nama,
             'nim' => $request->nim,
             'kelas' => $request->kelas,
@@ -80,30 +84,8 @@ class MahasiswaController extends Controller
             'UKM' => 'Belum Memilih',
         ]);
 
-        if (auth()->user()->isPengurus()) {
-            $ukmId = auth()->user()->getUkmId();
-            if ($ukmId) {
-                $ukm = \App\Models\Ukm::find($ukmId);
-                if ($status === 'approved') {
-                    \App\Models\AnggotaUkm::create([
-                        'user_id' => $user->id,
-                        'ukm_id' => $ukmId,
-                        'tanggal_bergabung' => now(),
-                    ]);
-                    $user->update(['UKM' => $ukm->nama]);
-                } else {
-                    \App\Models\Pendaftaran::create([
-                        'user_id' => $user->id,
-                        'ukm_id' => $ukmId,
-                        'alasan' => 'Diajukan oleh pengurus UKM (' . auth()->user()->nama . ')',
-                        'status' => 'pending',
-                    ]);
-                }
-            }
-        }
-
-        $msg = $status === 'approved' 
-            ? 'Data mahasiswa berhasil ditambahkan dan disetujui.' 
+        $msg = $status === 'approved'
+            ? 'Data mahasiswa berhasil ditambahkan dan disetujui.'
             : 'Data mahasiswa berhasil ditambahkan. Status: Pending — perlu disetujui admin sebelum aktif.';
 
         return redirect()->route('mahasiswa.index')->with('success', $msg);
@@ -111,12 +93,19 @@ class MahasiswaController extends Controller
 
     public function edit($id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
         $mahasiswa = User::findOrFail($id);
         return view('mahasiswa.edit', compact('mahasiswa'));
     }
 
     public function update(Request $request, $id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $mahasiswa = User::findOrFail($id);
 
         $request->validate([
@@ -134,55 +123,28 @@ class MahasiswaController extends Controller
             ['status' => $status]
         ));
 
-        if (auth()->user()->isPengurus()) {
-            $ukmId = auth()->user()->getUkmId();
-            if ($ukmId) {
-                $ukm = \App\Models\Ukm::find($ukmId);
-                if ($status === 'approved') {
-                    \App\Models\AnggotaUkm::firstOrCreate([
-                        'user_id' => $mahasiswa->id,
-                        'ukm_id' => $ukmId,
-                    ], [
-                        'tanggal_bergabung' => now(),
-                    ]);
-                    $mahasiswa->update(['UKM' => $ukm->nama]);
-                } else {
-                    \App\Models\AnggotaUkm::where('user_id', $mahasiswa->id)->where('ukm_id', $ukmId)->delete();
-                    $mahasiswa->update(['UKM' => 'Belum Memilih']);
-
-                    \App\Models\Pendaftaran::firstOrCreate([
-                        'user_id' => $mahasiswa->id,
-                        'ukm_id' => $ukmId,
-                        'status' => 'pending',
-                    ], [
-                        'alasan' => 'Diajukan oleh pengurus UKM (' . auth()->user()->nama . ')',
-                    ]);
-                }
-            }
-        }
-
         return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui');
     }
 
     public function destroy($id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
         User::findOrFail($id)->delete();
         return back()->with('success', 'Data mahasiswa berhasil dihapus');
     }
 
     public function search(Request $request)
     {
-        $keyword = $request->keyword;
-        $query = User::where('Role', '!=', 'administrator');
-
         if (!auth()->user()->isAdmin()) {
-            $ukmId = auth()->user()->getUkmId();
-            $query->whereHas('anggotaUkm', function ($q) use ($ukmId) {
-                $q->where('ukm_id', $ukmId);
-            });
+            abort(403);
         }
 
-        $mahasiswaList = $query->where(function ($query) use ($keyword) {
+        $keyword = $request->keyword;
+
+        $mahasiswaList = User::where('Role', '!=', 'administrator')
+            ->where(function ($query) use ($keyword) {
                 $query->where('nama', 'like', "%$keyword%")
                     ->orWhere('nim', 'like', "%$keyword%")
                     ->orWhere('kelas', 'like', "%$keyword%");
@@ -193,17 +155,21 @@ class MahasiswaController extends Controller
         return view('mahasiswa.index', compact('mahasiswaList'));
     }
 
-    // Approve mahasiswa
     public function approve($id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
         $mahasiswa = User::findOrFail($id);
         $mahasiswa->update(['status' => 'approved']);
         return back()->with('success', "Mahasiswa {$mahasiswa->nama} berhasil disetujui");
     }
 
-    // Tolak mahasiswa
     public function tolak($id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
         $mahasiswa = User::findOrFail($id);
         $mahasiswa->update(['status' => 'ditolak']);
         return back()->with('success', "Mahasiswa {$mahasiswa->nama} ditolak");
@@ -211,6 +177,10 @@ class MahasiswaController extends Controller
 
     public function exportExcel()
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $mahasiswaList = User::where('Role', '!=', 'administrator')->get();
         $headers = [
             'Content-Type' => 'text/csv',
@@ -231,14 +201,11 @@ class MahasiswaController extends Controller
 
     public function cetak()
     {
-        if (auth()->user()->isAdmin()) {
-            $mahasiswaList = User::where('Role', '!=', 'administrator')->get();
-        } else {
-            $ukmId = auth()->user()->getUkmId();
-            $mahasiswaList = User::whereHas('anggotaUkm', function ($query) use ($ukmId) {
-                $query->where('ukm_id', $ukmId);
-            })->get();
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
         }
+
+        $mahasiswaList = User::where('Role', '!=', 'administrator')->get();
         return view('mahasiswa.cetak', compact('mahasiswaList'));
     }
 }

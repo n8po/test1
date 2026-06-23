@@ -30,10 +30,10 @@
             @foreach($kegiatanList as $i => $k)
             <tr>
                 <td>{{ $i + 1 }}</td>
-                <td>{{ $k->nama }}</td>
-                <td>{{ $k->ukm->nama ?? '-' }}</td>
-                <td>{{ $k->tanggal ?? '-' }}</td>
-                <td>{{ $k->keterangan ?? '-' }}</td>
+                <td>{{ $k->nama_kegiatan }}</td>
+                <td>{{ $k->UKM ?? '-' }}</td>
+                <td>{{ $k->tanggal ? \Carbon\Carbon::parse($k->tanggal)->format('d-m-Y') : '-' }}</td>
+                <td>{{ $k->deskripsi ?? '-' }}</td>
             </tr>
             @endforeach
         </tbody>

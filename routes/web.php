@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\UkmController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\KegiatanController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -45,6 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pendaftaran/search', [PendaftaranController::class, 'search'])->name('pendaftaran.search');
     Route::get('/pendaftaran/export', [PendaftaranController::class, 'exportExcel'])->name('pendaftaran.export');
     Route::get('/pendaftaran/cetak', [PendaftaranController::class, 'cetak'])->name('pendaftaran.cetak');
+
+    // Kegiatan Routes
+    Route::get('/kegiatan/cetak', [KegiatanController::class, 'cetak'])->name('kegiatan.cetak');
+    Route::resource('kegiatan', KegiatanController::class);
 
     // Anggota UKM Routes
     Route::get('/admin/anggota', [AdminController::class, 'indexAnggota'])->name('admin.anggota.index');

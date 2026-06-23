@@ -24,10 +24,6 @@ class Kegiatan extends Model
     protected $fillable = [
         'nama_kegiatan',
         'UKM',
-        'Nama',
-        'Kelas',
-        'Prodi',
-        'Jurusan',
         'tanggal',
         'deskripsi'
     ];

@@ -61,10 +61,6 @@ class KegiatanController extends Controller
         Kegiatan::create([
             'nama_kegiatan' => $request->nama_kegiatan,
             'UKM' => $request->ukm,
-            'Nama' => $userData->nama,
-            'Kelas' => $userData->kelas,
-            'Prodi' => $userData->prodi,
-            'Jurusan' => $userData->jurusan,
             'tanggal' => $request->tanggal,
             'deskripsi' => $request->deskripsi,
         ]);
@@ -94,5 +90,11 @@ class KegiatanController extends Controller
         $kegiatanData->delete();
 
         return back()->with('success', 'Kegiatan berhasil dihapus');
+    }
+
+    public function cetak()
+    {
+        $kegiatanList = Kegiatan::all();
+        return view('kegiatan.cetak', compact('kegiatanList'));
     }
 }

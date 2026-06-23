@@ -116,7 +116,14 @@
     </div>
     @else
     {{-- UKM Table View (Ketua & Sekretaris Only) --}}
-    <x-ui::card>
+    <x-ui::alert>
+        <x-lucide-info class="size-4" />
+        <x-ui::alert-description>
+            Anggota baru yang ditambahkan akan masuk sebagai <strong>Pendaftaran (Pending)</strong> dan perlu disetujui oleh admin.
+        </x-ui::alert-description>
+    </x-ui::alert>
+
+    <x-ui::card class="mt-4">
         <x-ui::card-content class="p-0">
             <x-ui::table>
                 <x-ui::table-header>

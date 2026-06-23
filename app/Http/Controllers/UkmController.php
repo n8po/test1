@@ -43,7 +43,10 @@ class UkmController extends Controller
             return redirect()->route('mahasiswa.index')->with('error', 'Anda tidak memiliki hak akses ke halaman tersebut');
         }
 
-        $ukmList = Ukm::with(['anggota.user'])->withCount('anggota')->paginate(6);
+        $ukmId = $user->isPengurus() ? $user->getUkmId() : null;
+        $ukmList = Ukm::with(['anggota.user'])->withCount('anggota')
+            ->when($ukmId, fn($q) => $q->where('id', $ukmId))
+            ->paginate(6);
         $mahasiswaList = \App\Models\User::where('Role', '!=', 'administrator')
             ->where('status', 'approved')
             ->doesntHave('anggotaAktif')
@@ -120,8 +123,10 @@ class UkmController extends Controller
         }
 
         $keyword = $request->keyword;
+        $ukmId = $user->isPengurus() ? $user->getUkmId() : null;
         $ukmList = Ukm::with(['anggota.user'])->withCount('anggota')
             ->where('nama', 'like', "%$keyword%")
+            ->when($ukmId, fn($q) => $q->where('id', $ukmId))
             ->paginate(6);
         $mahasiswaList = \App\Models\User::where('Role', '!=', 'administrator')
             ->where('status', 'approved')
@@ -137,7 +142,10 @@ class UkmController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $ukmList = Ukm::withCount('anggota')->get();
+        $ukmId = $user->isPengurus() ? $user->getUkmId() : null;
+        $ukmList = Ukm::withCount('anggota')
+            ->when($ukmId, fn($q) => $q->where('id', $ukmId))
+            ->get();
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="ukm.csv"',
@@ -162,7 +170,10 @@ class UkmController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $ukmList = Ukm::withCount('anggota')->get();
+        $ukmId = $user->isPengurus() ? $user->getUkmId() : null;
+        $ukmList = Ukm::withCount('anggota')
+            ->when($ukmId, fn($q) => $q->where('id', $ukmId))
+            ->get();
         return view('ukm.cetak', compact('ukmList'));
     }
 }
