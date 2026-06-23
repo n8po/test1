@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="max-w-2xl mx-auto">
-    <x-ui:card>
-        <x-ui:card-header>
-            <x-ui:card-title>Profil Saya</x-ui:card-title>
-        </x-ui:card-header>
-        <x-ui:card-content>
+    <x-ui::card>
+        <x-ui::card-header>
+            <x-ui::card-title>Profil Saya</x-ui::card-title>
+        </x-ui::card-header>
+        <x-ui::card-content>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="p-4 bg-gray-50 rounded-lg">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-        </x-ui:card-content>
-    </x-ui:card>
+        </x-ui::card-content>
+    </x-ui::card>
 </div>
 @endsection

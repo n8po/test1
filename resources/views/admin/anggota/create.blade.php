@@ -13,61 +13,61 @@
         <h1 class="text-2xl font-bold tracking-tight">Tambah Anggota</h1>
     </div>
 
-    <x-ui:card>
-        <x-ui:card-header>
-            <x-ui:card-title>Form Tambah Anggota</x-ui:card-title>
-            <x-ui:card-description>Tambah anggota UKM baru</x-ui:card-description>
-        </x-ui:card-header>
-        <x-ui:card-content>
+    <x-ui::card>
+        <x-ui::card-header>
+            <x-ui::card-title>Form Tambah Anggota</x-ui::card-title>
+            <x-ui::card-description>Tambah anggota UKM baru</x-ui::card-description>
+        </x-ui::card-header>
+        <x-ui::card-content>
             <form method="POST" action="{{ route('admin.anggota.store') }}" class="space-y-4">
                 @csrf
 
                 <div class="grid grid-cols-2 gap-4">
-                    <x-ui:field>
-                        <x-ui:field-label for="nama">Nama Lengkap</x-ui:field-label>
-                        <x-ui:input id="nama" type="text" name="nama" value="{{ old('nama') }}" required />
-                    </x-ui:field>
+                    <x-ui::field>
+                        <x-ui::field-label for="nama">Nama Lengkap</x-ui::field-label>
+                        <x-ui::input id="nama" type="text" name="nama" value="{{ old('nama') }}" required />
+                    </x-ui::field>
 
-                    <x-ui:field>
-                        <x-ui:field-label for="nim">NIM</x-ui:field-label>
-                        <x-ui:input id="nim" type="text" name="nim" value="{{ old('nim') }}" required />
-                    </x-ui:field>
+                    <x-ui::field>
+                        <x-ui::field-label for="nim">NIM</x-ui::field-label>
+                        <x-ui::input id="nim" type="text" name="nim" value="{{ old('nim') }}" required />
+                    </x-ui::field>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <x-ui:field>
-                        <x-ui:field-label for="kelas">Kelas</x-ui:field-label>
-                        <x-ui:input id="kelas" type="text" name="kelas" value="{{ old('kelas') }}" required />
-                    </x-ui:field>
+                    <x-ui::field>
+                        <x-ui::field-label for="kelas">Kelas</x-ui::field-label>
+                        <x-ui::input id="kelas" type="text" name="kelas" value="{{ old('kelas') }}" required />
+                    </x-ui::field>
 
-                    <x-ui:field>
-                        <x-ui:field-label for="prodi">Prodi</x-ui:field-label>
-                        <x-ui:input id="prodi" type="text" name="prodi" value="{{ old('prodi') }}" required />
-                    </x-ui:field>
+                    <x-ui::field>
+                        <x-ui::field-label for="prodi">Prodi</x-ui::field-label>
+                        <x-ui::input id="prodi" type="text" name="prodi" value="{{ old('prodi') }}" required />
+                    </x-ui::field>
                 </div>
 
-                <x-ui:field>
-                    <x-ui:field-label for="jurusan">Jurusan</x-ui:field-label>
-                    <x-ui:input id="jurusan" type="text" name="jurusan" value="{{ old('jurusan') }}" required />
-                </x-ui:field>
+                <x-ui::field>
+                    <x-ui::field-label for="jurusan">Jurusan</x-ui::field-label>
+                    <x-ui::input id="jurusan" type="text" name="jurusan" value="{{ old('jurusan') }}" required />
+                </x-ui::field>
 
-                <x-ui:field>
-                    <x-ui:field-label for="ukm_id">UKM</x-ui:field-label>
-                    <x-ui:select id="ukm_id" name="ukm_id" native required>
+                <x-ui::field>
+                    <x-ui::field-label for="ukm_id">UKM</x-ui::field-label>
+                    <x-ui::select id="ukm_id" name="ukm_id" native required>
                         @foreach($ukmList as $ukm)
                         <option value="{{ $ukm->id }}">{{ $ukm->nama }}</option>
                         @endforeach
-                    </x-ui:select>
-                </x-ui:field>
+                    </x-ui::select>
+                </x-ui::field>
 
-                <x-ui:separator />
+                <x-ui::separator />
 
                 <div class="flex gap-4">
-                    <x-ui:button type="submit">Simpan</x-ui:button>
-                    <x-ui:button href="{{ route('admin.anggota.index') }}" variant="outline">Batal</x-ui:button>
+                    <x-ui::button type="submit">Simpan</x-ui::button>
+                    <x-ui::button href="{{ route('admin.anggota.index') }}" variant="outline">Batal</x-ui::button>
                 </div>
             </form>
-        </x-ui:card-content>
-    </x-ui:card>
+        </x-ui::card-content>
+    </x-ui::card>
 </div>
 @endsection

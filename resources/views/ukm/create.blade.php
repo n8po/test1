@@ -13,32 +13,32 @@
         <h1 class="text-2xl font-bold tracking-tight">Tambah UKM</h1>
     </div>
 
-    <x-ui:card>
-        <x-ui:card-header>
-            <x-ui:card-title>Form Tambah UKM</x-ui:card-title>
-            <x-ui:card-description>Tambah unit kegiatan mahasiswa baru</x-ui:card-description>
-        </x-ui:card-header>
-        <x-ui:card-content>
+    <x-ui::card>
+        <x-ui::card-header>
+            <x-ui::card-title>Form Tambah UKM</x-ui::card-title>
+            <x-ui::card-description>Tambah unit kegiatan mahasiswa baru</x-ui::card-description>
+        </x-ui::card-header>
+        <x-ui::card-content>
             <form method="POST" action="{{ route('ukm.store') }}" class="space-y-4">
                 @csrf
-                <x-ui:field>
-                    <x-ui:field-label for="nama">Nama UKM</x-ui:field-label>
-                    <x-ui:input id="nama" type="text" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama UKM" required />
-                </x-ui:field>
+                <x-ui::field>
+                    <x-ui::field-label for="nama">Nama UKM</x-ui::field-label>
+                    <x-ui::input id="nama" type="text" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama UKM" required />
+                </x-ui::field>
 
-                <x-ui:field>
-                    <x-ui:field-label for="deskripsi">Deskripsi</x-ui:field-label>
-                    <x-ui:textarea id="deskripsi" name="deskripsi" placeholder="Deskripsi UKM" rows="4">{{ old('deskripsi') }}</x-ui:textarea>
-                </x-ui:field>
+                <x-ui::field>
+                    <x-ui::field-label for="deskripsi">Deskripsi</x-ui::field-label>
+                    <x-ui::textarea id="deskripsi" name="deskripsi" placeholder="Deskripsi UKM" rows="4">{{ old('deskripsi') }}</x-ui::textarea>
+                </x-ui::field>
 
-                <x-ui:separator />
+                <x-ui::separator />
 
                 <div class="flex gap-2">
-                    <x-ui:button type="submit">Simpan</x-ui:button>
-                    <x-ui:button href="{{ route('ukm.index') }}" variant="outline">Batal</x-ui:button>
+                    <x-ui::button type="submit">Simpan</x-ui::button>
+                    <x-ui::button href="{{ route('ukm.index') }}" variant="outline">Batal</x-ui::button>
                 </div>
             </form>
-        </x-ui:card-content>
-    </x-ui:card>
+        </x-ui::card-content>
+    </x-ui::card>
 </div>
 @endsection

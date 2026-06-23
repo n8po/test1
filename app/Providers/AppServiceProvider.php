@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register BlatUI anonymous component path
+        \Illuminate\Support\Facades\Blade::anonymousComponentPath(resource_path('views/components/ui'), 'ui');
     }
 }
