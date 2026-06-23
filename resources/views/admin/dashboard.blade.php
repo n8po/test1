@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Dashboard')
-
 @section('content')
 <div class="space-y-6">
     {{-- Stats Cards --}}
@@ -25,40 +23,77 @@
                     <p class="text-3xl font-bold">{{ $totalUkm }}</p>
                 </div>
                 <div class="rounded-full bg-emerald-500/10 p-3 text-emerald-600">
-                    <x-lucide-users class="size-5" />
+                    <x-lucide-building-2 class="size-5" />
+                </div>
+            </x-ui::card-content>
+        </x-ui::card>
+
+        <x-ui::card>
+            <x-ui::card-content class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Pendaftaran Pending</p>
+                    <p class="text-3xl font-bold">{{ $pendaftaranPending }}</p>
+                </div>
+                <div class="rounded-full bg-amber-500/10 p-3 text-amber-600">
+                    <x-lucide-clock class="size-5" />
+                </div>
+            </x-ui::card-content>
+        </x-ui::card>
+
+        <x-ui::card>
+            <x-ui::card-content class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Anggota Aktif</p>
+                    <p class="text-3xl font-bold">{{ $totalAnggota }}</p>
+                </div>
+                <div class="rounded-full bg-purple-500/10 p-3 text-purple-600">
+                    <x-lucide-check-circle class="size-5" />
+                </div>
+            </x-ui::card-content>
+        </x-ui::card>
+    </div>
+
+    {{-- Quick Actions --}}
+    <x-ui::card>
+        <x-ui::card-header>
+            <x-ui::card-title>Menu Utama</x-ui::card-title>
+            <x-ui::card-description>Akses cepat ke fitur utama</x-ui::card-description>
+        </x-ui::card-header>
+        <x-ui::card-content>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="{{ route('mahasiswa.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
+                    <div class="rounded-lg bg-primary/10 p-2 text-primary">
+                        <x-lucide-users class="size-5" />
                     </div>
                     <div>
-                        <p class="font-medium">Mahasiswa</p>
+                        <p class="font-medium text-sm">Mahasiswa</p>
                         <p class="text-xs text-muted-foreground">Kelola data mahasiswa</p>
                     </div>
                 </a>
-
                 <a href="{{ route('ukm.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
-                        <x-lucide-building class="size-5" />
+                        <x-lucide-building-2 class="size-5" />
                     </div>
                     <div>
-                        <p class="font-medium">Unit Kegiatan</p>
+                        <p class="font-medium text-sm">Unit Kegiatan</p>
                         <p class="text-xs text-muted-foreground">Kelola data UKM</p>
                     </div>
                 </a>
-
                 <a href="{{ route('pendaftaran.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-amber-500/10 p-2 text-amber-600">
                         <x-lucide-file-text class="size-5" />
                     </div>
                     <div>
-                        <p class="font-medium">Pendaftaran</p>
+                        <p class="font-medium text-sm">Pendaftaran</p>
                         <p class="text-xs text-muted-foreground">Persetujuan anggota</p>
                     </div>
                 </a>
-
                 <a href="{{ route('admin.anggota.index') }}" class="flex items-center gap-3 rounded-lg border p-4 hover:bg-accent hover:text-accent-foreground transition-colors">
                     <div class="rounded-lg bg-purple-500/10 p-2 text-purple-600">
-                        <x-lucide-user-check class="size-4" />
+                        <x-lucide-user-check class="size-5" />
                     </div>
                     <div>
-                        <p class="font-medium">Anggota UKM</p>
+                        <p class="font-medium text-sm">Anggota UKM</p>
                         <p class="text-xs text-muted-foreground">Data anggota aktif</p>
                     </div>
                 </a>
@@ -76,7 +111,7 @@
             </div>
             <x-ui::button href="{{ route('pendaftaran.index') }}" size="sm" variant="outline">Lihat Semua</x-ui::button>
         </x-ui::card-header>
-        <x-ui::card-content>
+        <x-ui::card-content class="p-0">
             <x-ui::table>
                 <x-ui::table-header>
                     <x-ui::table-row>
@@ -95,9 +130,9 @@
                         <x-ui::table-cell>{{ $p->ukm->nama }}</x-ui::table-cell>
                         <x-ui::table-cell>
                             @if($p->status === 'pending')
-                                <x-ui::badge variant="warning">Pending</x-ui::badge>
+                                <x-ui::badge variant="outline">Pending</x-ui::badge>
                             @elseif($p->status === 'diterima')
-                                <x-ui::badge variant="success">Diterima</x-ui::badge>
+                                <x-ui::badge variant="secondary">Diterima</x-ui::badge>
                             @else
                                 <x-ui::badge variant="destructive">Ditolak</x-ui::badge>
                             @endif
