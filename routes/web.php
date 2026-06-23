@@ -23,17 +23,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Mahasiswa Routes
-    Route::resource('mahasiswa', MahasiswaController::class);
-    Route::post('/mahasiswa/search', [MahasiswaController::class, 'search'])->name('mahasiswa.search');
+    // Mahasiswa Routes — export/cetak/search HARUS sebelum resource biar gak ketiban show
     Route::get('/mahasiswa/export', [MahasiswaController::class, 'exportExcel'])->name('mahasiswa.export');
     Route::get('/mahasiswa/cetak', [MahasiswaController::class, 'cetak'])->name('mahasiswa.cetak');
+    Route::post('/mahasiswa/search', [MahasiswaController::class, 'search'])->name('mahasiswa.search');
+    Route::resource('mahasiswa', MahasiswaController::class)->except(['show']);
 
     // UKM Routes
-    Route::resource('ukm', UkmController::class);
-    Route::post('/ukm/search', [UkmController::class, 'search'])->name('ukm.search');
     Route::get('/ukm/export', [UkmController::class, 'exportExcel'])->name('ukm.export');
     Route::get('/ukm/cetak', [UkmController::class, 'cetak'])->name('ukm.cetak');
+    Route::post('/ukm/search', [UkmController::class, 'search'])->name('ukm.search');
+    Route::resource('ukm', UkmController::class)->except(['show']);
 
     // Pendaftaran Routes
     Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');

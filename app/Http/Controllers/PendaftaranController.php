@@ -23,14 +23,14 @@ class PendaftaranController extends Controller
     public function setujui($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
-        
+
         $exists = AnggotaUkm::where('user_id', $pendaftaran->user_id)->exists();
         if ($exists) {
             return back()->with('error', 'Mahasiswa sudah terdaftar di UKM lain');
         }
 
         $pendaftaran->update(['status' => 'diterima']);
-        
+
         AnggotaUkm::create([
             'user_id' => $pendaftaran->user_id,
             'ukm_id' => $pendaftaran->ukm_id,
@@ -53,17 +53,23 @@ class PendaftaranController extends Controller
     {
         $keyword = $request->keyword;
         $pendaftaranList = Pendaftaran::with(['user', 'ukm'])
-            ->whereHas('user', function ($q) use ($keyword) {
-                $q->where('nama', 'like', "%$keyword%")
-                  ->orWhere('nim', 'like', "%$keyword%");
+            ->where(function ($query) use ($keyword) {
+                $query->whereHas('user', function ($q) use ($keyword) {
+                    $q->where('nama', 'like', "%$keyword%")
+                      ->orWhere('nim', 'like', "%$keyword%");
+                })->orWhereHas('ukm', function ($q) use ($keyword) {
+                    $q->where('nama', 'like', "%$keyword%");
+                });
             })
             ->get();
+
         return view('pendaftaran.index', compact('pendaftaranList'));
     }
 
     public function exportExcel()
     {
         $pendaftaranList = Pendaftaran::with(['user', 'ukm'])->get();
+
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="pendaftaran.csv"',
@@ -71,17 +77,19 @@ class PendaftaranController extends Controller
 
         $callback = function () use ($pendaftaranList) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['No', 'NIM', 'Nama', 'UKM', 'Status', 'Tanggal Daftar']);
-            foreach ($pendaftaranList as $index => $p) {
+            fputcsv($file, ['No', 'Nama', 'NIM', 'UKM', 'Status', 'Tanggal Daftar']);
+
+            foreach ($pendaftaranList as $i => $p) {
                 fputcsv($file, [
-                    $index + 1,
-                    $p->user->nim,
-                    $p->user->nama,
-                    $p->ukm->nama,
+                    $i + 1,
+                    $p->user->nama ?? '-',
+                    $p->user->nim ?? '-',
+                    $p->ukm->nama ?? '-',
                     $p->status,
-                    $p->created_at->format('d-m-Y H:i')
+                    $p->created_at->format('d-m-Y'),
                 ]);
             }
+
             fclose($file);
         };
 
