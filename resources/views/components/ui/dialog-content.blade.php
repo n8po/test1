@@ -44,7 +44,7 @@
 
         <div
             x-show="open"
-            x-trap.noscroll.inert="open"
+            x-trap.noscroll="open"
             @keydown.escape.window="open = false"
             :id="$id('blat-dialog')"
             x-blat-labelledby="{ label: '[data-slot=dialog-title]', description: '[data-slot=dialog-description]' }"

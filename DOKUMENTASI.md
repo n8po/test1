@@ -13,7 +13,7 @@
 | No | Aktivitas | Status | Implementasi |
 |----|-----------|--------|--------------|
 | 1 | Menu mahasiswa, UKM, pendaftaran anggota, anggota UKM di awal tampilan | ✅ | Dashboard menampilkan 5 menu: Mahasiswa, UKM, Pendaftaran, Anggota UKM, Dashboard |
-| 2 | Hanya 1 akun administrator | ✅ | Single role: admin (username: admin, password: admin123) |
+| 2 | Akun Administrator | ✅ | Role: administrator (email: wadir3@poliban.ac.id & kabagakademik@poliban.ac.id, password: admin123) |
 | 3 | Pendaftaran mahasiswa & UKM melalui Wakil Direktur III / Kabag Akademik | ✅ | Admin melakukan pendaftaran manual atas permintaan pihak berwenang |
 | 4 | Pendaftaran anggota UKM melalui Ketua/Sekretaris UKM | ✅ | Admin menambahkan anggota UKM berdasarkan data dari ketua/sekretaris |
 | 5 | Data tersimpan: mahasiswa, UKM, anggota | ✅ | 5 mahasiswa, 3 UKM, 3 anggota (seed data) |
@@ -154,7 +154,7 @@
 - **Browser**: Chromium (Playwright)
 - **Viewport**: 1366x768
 - **URL**: http://localhost:8005
-- **Credential**: admin / admin123
+- **Credential**: wadir3@poliban.ac.id / admin123
 - **Status**: 12/12 ✅ (100% Pass)
 
 ---
@@ -259,9 +259,42 @@ php artisan serve --port=8005
 npx playwright install chromium
 node screenshot.cjs
 
-# Login
-# Username: admin
+# Akses Login
+# Wakil Direktur III (Administrator):
+# Email: wadir3@poliban.ac.id
 # Password: admin123
+#
+# Kepala Bagian Akademik (Administrator):
+# Email: kabagakademik@poliban.ac.id
+# Password: admin123
+#
+# Ketua UKM Wasi Putih (Pengurus):
+# Email: ketua1@poliban.ac.id
+# Password: mahasiswa123
+#
+# Sekretaris UKM Wasi Putih (Pengurus):
+# Email: sekretaris1@poliban.ac.id
+# Password: mahasiswa123
+#
+# Ketua UKM Music Generation (Pengurus):
+# Email: ketua2@poliban.ac.id
+# Password: mahasiswa123
+#
+# Sekretaris UKM Music Generation (Pengurus):
+# Email: sekretaris2@poliban.ac.id
+# Password: mahasiswa123
+#
+# Ketua UKM Basket (Pengurus):
+# Email: ketua3@poliban.ac.id
+# Password: mahasiswa123
+#
+# Sekretaris UKM Basket (Pengurus):
+# Email: sekretaris3@poliban.ac.id
+# Password: mahasiswa123
+#
+# Anggota UKM (Mahasiswa):
+# Email: anggota1@poliban.ac.id (dan anggota2, anggota3)
+# Password: mahasiswa123
 ```
 
 ---

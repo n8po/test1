@@ -24,6 +24,7 @@ class AnggotaUkm extends Model
     protected $fillable = [
         'user_id',
         'ukm_id',
+        'jabatan',
         'tanggal_bergabung'
     ];
 

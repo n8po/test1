@@ -2,8 +2,29 @@
 /**
  * Module: PendaftaranController
  * Created: 2026-06-23
- * Author: System
+ * Author: Raditya Natha Azra
  * Synopsis: Controller untuk manajemen pendaftaran anggota UKM
+ * 
+ * Functions:
+ *   - index() : view -> tampilkan daftar pendaftaran
+ *   - create() : view -> tampilkan form tambah pendaftaran
+ *   - store(Request) : redirect -> proses tambah pendaftaran
+ *   - edit($id) : view -> tampilkan form edit pendaftaran
+ *   - update(Request, $id) : redirect -> proses update pendaftaran
+ *   - destroy($id) : redirect -> proses hapus pendaftaran
+ *   - search(Request) : view -> cari data pendaftaran
+ *   - approve($id) : redirect -> setujui pendaftaran
+ *   - tolak($id) : redirect -> tolak pendaftaran
+ * 
+ * Input Parameters:
+ *   - user_id : integer -> id mahasiswa pendaftar
+ *   - ukm_id : integer -> id ukm yang didaftar
+ *   - alasan : string -> alasan mendaftar
+ *   - keyword : string -> kata kunci pencarian
+ * 
+ * Return Values:
+ *   - 0 : gagal
+ *   - 1 : berhasil
  */
 
 namespace App\Http\Controllers;

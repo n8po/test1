@@ -16,7 +16,7 @@
             <form method="POST" action="{{ route('pendaftaran.search') }}">
                 @csrf
                 <div class="flex gap-2">
-                    <x-ui::input type="text" name="keyword" placeholder="Cari nama, NIM, atau UKM..." class="flex-1" />
+                    <x-ui::input type="text" name="keyword" placeholder="Cari nama, NIM, atau UKM..." value="{{ request('keyword') }}" class="flex-1" />
                     <x-ui::button type="submit">Cari</x-ui::button>
                     <x-ui::button href="{{ route('pendaftaran.index') }}" variant="outline">Reset</x-ui::button>
                 </div>
@@ -33,38 +33,54 @@
             <x-ui::table>
                 <x-ui::table-header>
                     <x-ui::table-row>
-                        <x-ui::table-head>No</x-ui::table-head>
+                        <x-ui::table-head class="w-12">No</x-ui::table-head>
                         <x-ui::table-head>Nama</x-ui::table-head>
                         <x-ui::table-head>NIM</x-ui::table-head>
                         <x-ui::table-head>UKM</x-ui::table-head>
                         <x-ui::table-head>Status</x-ui::table-head>
-                        <x-ui::table-head>Aksi</x-ui::table-head>
+                        <x-ui::table-head class="w-10"><span class="sr-only">Actions</span></x-ui::table-head>
                     </x-ui::table-row>
                 </x-ui::table-header>
                 <x-ui::table-body>
                     @forelse($pendaftaranList as $i => $p)
                     <x-ui::table-row>
                         <x-ui::table-cell>{{ $i + 1 }}</x-ui::table-cell>
-                        <x-ui::table-cell>{{ $p->user->nama ?? '-' }}</x-ui::table-cell>
-                        <x-ui::table-cell>{{ $p->user->nim ?? '-' }}</x-ui::table-cell>
+                        <x-ui::table-cell class="font-medium">{{ $p->user->nama ?? '-' }}</x-ui::table-cell>
+                        <x-ui::table-cell class="font-mono text-xs">{{ $p->user->nim ?? '-' }}</x-ui::table-cell>
                         <x-ui::table-cell>{{ $p->ukm->nama ?? '-' }}</x-ui::table-cell>
                         <x-ui::table-cell>
                             <x-ui::badge variant="{{ $p->status == 'pending' ? 'outline' : ($p->status == 'diterima' ? 'secondary' : 'destructive') }}">
-                                {{ $p->status }}
+                                {{ ucfirst($p->status) }}
                             </x-ui::badge>
                         </x-ui::table-cell>
-                        <x-ui::table-cell>
+                        <x-ui::table-cell class="text-right">
                             @if($p->status == 'pending')
-                            <form method="POST" action="{{ route('pendaftaran.setujui', $p->id) }}" class="inline mr-1">
-                                @csrf
-                                <x-ui::button type="submit" size="xs" variant="secondary">Setujui</x-ui::button>
-                            </form>
-                            <form method="POST" action="{{ route('pendaftaran.tolak', $p->id) }}" class="inline">
-                                @csrf
-                                <x-ui::button type="submit" size="xs" variant="destructive">Tolak</x-ui::button>
-                            </form>
+                            <x-ui::dropdown-menu>
+                                <x-ui::dropdown-menu-trigger>
+                                    <x-ui::button variant="ghost" size="icon-sm" aria-label="Actions for {{ $p->user->nama ?? '-' }}">
+                                        <x-lucide-more-horizontal aria-hidden="true" />
+                                    </x-ui::button>
+                                </x-ui::dropdown-menu-trigger>
+                                <x-ui::dropdown-menu-content align="end">
+                                    <form method="POST" action="{{ route('pendaftaran.setujui', $p->id) }}">
+                                        @csrf
+                                        <x-ui::dropdown-menu-item type="submit">
+                                            <x-lucide-check class="size-4" />
+                                            Setujui
+                                        </x-ui::dropdown-menu-item>
+                                    </form>
+                                    <x-ui::dropdown-menu-separator />
+                                    <form method="POST" action="{{ route('pendaftaran.tolak', $p->id) }}">
+                                        @csrf
+                                        <x-ui::dropdown-menu-item type="submit" variant="destructive">
+                                            <x-lucide-x class="size-4 text-destructive" />
+                                            Tolak
+                                        </x-ui::dropdown-menu-item>
+                                    </form>
+                                </x-ui::dropdown-menu-content>
+                            </x-ui::dropdown-menu>
                             @else
-                            <span class="text-sm text-muted-foreground">Selesai</span>
+                            <span class="text-xs text-muted-foreground">Selesai</span>
                             @endif
                         </x-ui::table-cell>
                     </x-ui::table-row>

@@ -2,8 +2,30 @@
 /**
  * Module: UkmController
  * Created: 2026-06-23
- * Author: System
+ * Author: Raditya Natha Azra
  * Synopsis: Controller untuk manajemen data UKM
+ * 
+ * Functions:
+ *   - index() : view -> tampilkan daftar UKM
+ *   - create() : view -> tampilkan form tambah UKM
+ *   - store(Request) : redirect -> proses tambah UKM
+ *   - edit($id) : view -> tampilkan form edit UKM
+ *   - update(Request, $id) : redirect -> proses update UKM
+ *   - destroy($id) : redirect -> proses hapus UKM
+ *   - search(Request) : view -> cari data UKM
+ *   - tambahAnggota($id) : view -> form tambah anggota ke UKM
+ *   - simpanAnggota(Request, $id) : redirect -> proses tambah anggota ke UKM
+ * 
+ * Input Parameters:
+ *   - nama_ukm : string -> nama ukm
+ *   - deskripsi : string -> deskripsi ukm
+ *   - pembina : string -> nama pembina ukm
+ *   - keyword : string -> kata kunci pencarian
+ *   - user_id : integer -> id mahasiswa (untuk anggota)
+ * 
+ * Return Values:
+ *   - 0 : gagal
+ *   - 1 : berhasil
  */
 
 namespace App\Http\Controllers;
@@ -16,17 +38,33 @@ class UkmController extends Controller
 {
     public function index()
     {
-        $ukmList = Ukm::withCount('anggota')->get();
-        return view('ukm.index', compact('ukmList'));
+        $user = auth()->user();
+        if (!$user->isAdmin() && !$user->isPengurus()) {
+            return redirect()->route('mahasiswa.index')->with('error', 'Anda tidak memiliki hak akses ke halaman tersebut');
+        }
+
+        $ukmList = Ukm::with(['anggota.user'])->withCount('anggota')->paginate(6);
+        $mahasiswaList = \App\Models\User::where('Role', '!=', 'administrator')
+            ->where('status', 'approved')
+            ->doesntHave('anggotaAktif')
+            ->get();
+        return view('ukm.index', compact('ukmList', 'mahasiswaList'));
     }
 
     public function create()
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('ukm.create');
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'nama' => 'required|unique:ukms',
             'deskripsi' => 'nullable',
@@ -39,12 +77,21 @@ class UkmController extends Controller
     public function edit($id)
     {
         $ukm = Ukm::findOrFail($id);
+        $user = auth()->user();
+        if (!$user->isAdmin() && (!$user->isPengurus() || $user->getUkmId() != $ukm->id)) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('ukm.edit', compact('ukm'));
     }
 
     public function update(Request $request, $id)
     {
         $ukm = Ukm::findOrFail($id);
+        $user = auth()->user();
+        if (!$user->isAdmin() && (!$user->isPengurus() || $user->getUkmId() != $ukm->id)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'nama' => 'required|unique:ukms,nama,' . $id,
             'deskripsi' => 'nullable',
@@ -56,6 +103,10 @@ class UkmController extends Controller
 
     public function destroy($id)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $ukm = Ukm::findOrFail($id);
         $ukm->delete();
         return back()->with('success', 'UKM berhasil dihapus');
@@ -63,15 +114,29 @@ class UkmController extends Controller
 
     public function search(Request $request)
     {
+        $user = auth()->user();
+        if (!$user->isAdmin() && !$user->isPengurus()) {
+            return redirect()->route('mahasiswa.index')->with('error', 'Anda tidak memiliki hak akses ke halaman tersebut');
+        }
+
         $keyword = $request->keyword;
-        $ukmList = Ukm::withCount('anggota')
+        $ukmList = Ukm::with(['anggota.user'])->withCount('anggota')
             ->where('nama', 'like', "%$keyword%")
+            ->paginate(6);
+        $mahasiswaList = \App\Models\User::where('Role', '!=', 'administrator')
+            ->where('status', 'approved')
+            ->doesntHave('anggotaAktif')
             ->get();
-        return view('ukm.index', compact('ukmList'));
+        return view('ukm.index', compact('ukmList', 'mahasiswaList'));
     }
 
     public function exportExcel()
     {
+        $user = auth()->user();
+        if (!$user->isAdmin() && !$user->isPengurus()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $ukmList = Ukm::withCount('anggota')->get();
         $headers = [
             'Content-Type' => 'text/csv',
@@ -92,6 +157,11 @@ class UkmController extends Controller
 
     public function cetak()
     {
+        $user = auth()->user();
+        if (!$user->isAdmin() && !$user->isPengurus()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $ukmList = Ukm::withCount('anggota')->get();
         return view('ukm.cetak', compact('ukmList'));
     }

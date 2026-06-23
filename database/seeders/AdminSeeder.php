@@ -18,8 +18,20 @@ class AdminSeeder extends Seeder
     {
         $adminList = [
             [
-                'nama' => 'Administrator',
+                'username' => 'Wakil Direktur III',
+                'nama' => 'Wakil Direktur III',
                 'nim' => 'ADMIN001',
+                'kelas' => 'Staff',
+                'prodi' => 'Administrator',
+                'jurusan' => 'Poliban',
+                'Role' => 'administrator',
+                'UKM' => 'Administrator',
+                'password' => Hash::make('admin123'),
+            ],
+            [
+                'username' => 'Kepala Bagian Akademik',
+                'nama' => 'Kepala Bagian Akademik',
+                'nim' => 'ADMIN002',
                 'kelas' => 'Staff',
                 'prodi' => 'Administrator',
                 'jurusan' => 'Poliban',

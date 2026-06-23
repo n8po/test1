@@ -1,4 +1,31 @@
 <?php
+/**
+ * Module: AdminController
+ * Created: 2026-06-23
+ * Author: Raditya Natha Azra
+ * Synopsis: Controller untuk manajemen administrasi anggota, jabatan, dan ekspor data UKM
+ * 
+ * Functions:
+ *   - dashboard() : view -> Tampilkan dashboard admin/pengurus
+ *   - indexAnggota() : view -> Daftar anggota UKM
+ *   - createAnggota() : view -> Form tambah anggota UKM
+ *   - storeAnggota(Request) : redirect -> Simpan anggota UKM baru
+ *   - editAnggota($id) : view -> Form edit anggota UKM
+ *   - updateAnggota(Request, $id) : redirect -> Update data anggota UKM
+ *   - destroyAnggota($id) : redirect -> Hapus anggota UKM
+ *   - updateJabatan(Request, $id) : redirect -> Update jabatan anggota UKM
+ *   - exportAnggota($ukm_id) : stream -> Ekspor data anggota ke CSV
+ *   - cetakAnggota($ukm_id) : view -> Halaman cetak laporan anggota
+ * 
+ * Input Parameters:
+ *   - ukm_id : int -> ID UKM
+ *   - user_id : int -> ID User
+ *   - jabatan : string -> Jabatan anggota (ketua, sekretaris, anggota)
+ * 
+ * Return Values:
+ *   - 0 : gagal
+ *   - 1 : berhasil
+ */
 
 namespace App\Http\Controllers;
 
@@ -12,6 +39,28 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        $user = auth()->user();
+        if (!$user->isAdmin() && !$user->isPengurus()) {
+            return redirect()->route('mahasiswa.index');
+        }
+
+        // Pengurus (Ketua/Sekretaris): hanya data UKM mereka sendiri
+        if ($user->isPengurus()) {
+            $myUkmId = $user->getUkmId();
+            $myUkm = Ukm::find($myUkmId);
+            $totalAnggota = AnggotaUkm::where('ukm_id', $myUkmId)->count();
+            $anggotaAktif = AnggotaUkm::where('ukm_id', $myUkmId)->count();
+            $anggotaList = AnggotaUkm::with(['user', 'ukm'])->where('ukm_id', $myUkmId)->get();
+
+            return view('admin.dashboard', compact(
+                'totalAnggota',
+                'anggotaAktif',
+                'anggotaList',
+                'myUkm'
+            ));
+        }
+
+        // Admin: data lengkap
         $totalMahasiswa = User::where('Role', '!=', 'administrator')->count();
         $totalUkm = Ukm::count();
         $totalAnggota = AnggotaUkm::count();
@@ -63,6 +112,7 @@ class AdminController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'ukm_id' => 'required|exists:ukms,id',
+            'jabatan' => 'required|in:ketua,sekretaris,anggota',
         ]);
 
         $user = User::findOrFail($request->user_id);
@@ -72,18 +122,32 @@ class AdminController extends Controller
             return back()->with('error', 'User sudah terdaftar di UKM lain');
         }
 
+        // Cek constraint: hanya 1 ketua dan 1 sekretaris per UKM
+        if (in_array($request->jabatan, ['ketua', 'sekretaris'])) {
+            $exists = AnggotaUkm::where('ukm_id', $request->ukm_id)
+                ->where('jabatan', $request->jabatan)
+                ->exists();
+            if ($exists) {
+                $label = $request->jabatan === 'ketua' ? 'Ketua' : 'Sekretaris';
+                return back()->with('error', "UKM ini sudah memiliki {$label}. Hanya boleh 1 {$label} per UKM.");
+            }
+        }
+
+        $ukm = Ukm::find($request->ukm_id);
+
         $user->update([
-            'Role' => 'anggota',
-            'UKM' => Ukm::find($request->ukm_id)->nama,
+            'Role' => $request->jabatan,
+            'UKM' => $ukm->nama,
         ]);
 
         AnggotaUkm::create([
             'user_id' => $user->id,
             'ukm_id' => $request->ukm_id,
+            'jabatan' => $request->jabatan,
             'tanggal_bergabung' => now(),
         ]);
 
-        return redirect()->route('admin.anggota.index')->with('success', 'Anggota berhasil ditambahkan');
+        return redirect()->route('ukm.index')->with('success', 'Anggota berhasil ditambahkan sebagai ' . ucfirst($request->jabatan));
     }
 
     public function editAnggota($id)
@@ -116,6 +180,32 @@ class AdminController extends Controller
     {
         AnggotaUkm::findOrFail($id)->delete();
         return back()->with('success', 'Anggota berhasil dihapus');
+    }
+
+    public function updateJabatan(Request $request, $id)
+    {
+        $anggota = AnggotaUkm::findOrFail($id);
+
+        $request->validate([
+            'jabatan' => 'required|in:ketua,sekretaris,anggota',
+        ]);
+
+        // Cek constraint: hanya 1 ketua dan 1 sekretaris per UKM
+        if (in_array($request->jabatan, ['ketua', 'sekretaris'])) {
+            $exists = AnggotaUkm::where('ukm_id', $anggota->ukm_id)
+                ->where('jabatan', $request->jabatan)
+                ->where('id', '!=', $id)
+                ->exists();
+            if ($exists) {
+                $label = ucfirst($request->jabatan);
+                return back()->with('error', "UKM ini sudah memiliki {$label}. Hanya boleh 1 {$label} per UKM.");
+            }
+        }
+
+        $anggota->update(['jabatan' => $request->jabatan]);
+        $anggota->user->update(['Role' => $request->jabatan]);
+
+        return back()->with('success', 'Jabatan berhasil diubah menjadi ' . ucfirst($request->jabatan));
     }
 
     public function exportAnggota($ukmId = null)

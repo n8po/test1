@@ -1,4 +1,26 @@
 <?php
+/**
+ * Module: RoleController
+ * Created: 2026-06-23
+ * Author: Raditya Natha Azra
+ * Synopsis: Controller untuk manajemen data Role
+ * 
+ * Functions:
+ *   - index() : view -> tampilkan daftar role
+ *   - create() : view -> tampilkan form tambah role
+ *   - store(Request) : redirect -> proses tambah role
+ *   - show($id) : view -> tampilkan detail role
+ *   - edit($id) : view -> tampilkan form edit role
+ *   - update(Request, $id) : redirect -> proses update role
+ *   - destroy($id) : redirect -> proses hapus role
+ * 
+ * Input Parameters:
+ *   - nama : string -> nama role
+ * 
+ * Return Values:
+ *   - 0 : gagal
+ *   - 1 : berhasil
+ */
 
 namespace App\Http\Controllers;
 

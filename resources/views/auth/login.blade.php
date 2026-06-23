@@ -82,8 +82,8 @@
             <form method="POST" action="{{ route('login') }}" class="grid gap-5">
                 @csrf
                 <x-ui::field>
-                    <x-ui::field-label for="username">Username</x-ui::field-label>
-                    <x-ui::input id="username" type="text" name="username" placeholder="Masukkan username" value="{{ old('username') }}" required />
+                    <x-ui::field-label for="email">Email</x-ui::field-label>
+                    <x-ui::input id="email" type="email" name="email" placeholder="Masukkan email" value="{{ old('email') }}" required />
                 </x-ui::field>
 
                 <x-ui::field>

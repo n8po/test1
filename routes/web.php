@@ -20,6 +20,7 @@ Route::middleware('guest')->group(function () {
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/anggota/{id}/edit', [AdminController::class, 'editAnggota'])->name('admin.anggota.edit');
     Route::put('/admin/anggota/{id}', [AdminController::class, 'updateAnggota'])->name('admin.anggota.update');
     Route::delete('/admin/anggota/{id}', [AdminController::class, 'destroyAnggota'])->name('admin.anggota.destroy');
+    Route::put('/admin/anggota/{id}/jabatan', [AdminController::class, 'updateJabatan'])->name('admin.anggota.updateJabatan');
     Route::get('/admin/anggota/export/{ukm_id?}', [AdminController::class, 'exportAnggota'])->name('admin.anggota.export');
     Route::get('/admin/anggota/cetak/{ukm_id?}', [AdminController::class, 'cetakAnggota'])->name('admin.anggota.cetak');
 });

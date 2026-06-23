@@ -7,7 +7,7 @@ from docx.shared import Inches, Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
 
-BASE = "/var/www/test1"
+BASE = os.path.dirname(os.path.abspath(__file__))
 DOC = os.path.join(BASE, "RadityaNathaAzra_TUKTI_23.docx")
 SC = os.path.join(BASE, "screenshots")
 
@@ -156,7 +156,7 @@ add_para("Berikut adalah verifikasi 10 aktivitas yang berkaitan dengan pengelola
 verif_headers = ["No", "Aktivitas", "Status", "Implementasi"]
 verif_rows = [
     ["1", "Menu mahasiswa, UKM, pendaftaran anggota, anggota UKM di awal tampilan", "✅", "Dashboard menampilkan 5 menu: Mahasiswa, UKM, Pendaftaran, Anggota UKM, Dashboard"],
-    ["2", "Hanya 1 akun administrator", "✅", "Single role: admin (username: admin, password: admin123)"],
+    ["2", "Akun Administrator", "✅", "Role: administrator (email: wadir3@poliban.ac.id & kabagakademik@poliban.ac.id, password: admin123)"],
     ["3", "Pendaftaran mahasiswa & UKM melalui Wakil Direktur III / Kabag Akademik", "✅", "Admin melakukan pendaftaran manual atas permintaan pihak berwenang"],
     ["4", "Pendaftaran anggota UKM melalui Ketua/Sekretaris UKM", "✅", "Admin menambahkan anggota UKM berdasarkan data dari ketua/sekretaris"],
     ["5", "Data tersimpan: mahasiswa, UKM, anggota", "✅", "5 mahasiswa, 3 UKM, 3 anggota (seed data)"],
@@ -304,7 +304,7 @@ add_table(["Parameter", "Value"], [
     ["Browser", "Chromium (Playwright)"],
     ["Viewport", "1366 x 768 px"],
     ["URL", "http://localhost:8005"],
-    ["Credential", "admin / admin123"],
+    ["Credential", "wadir3@poliban.ac.id / admin123"],
     ["Total Tests", "12"],
     ["Passed", "12"],
     ["Failed", "0"],
@@ -434,10 +434,33 @@ php artisan serve --port=8005
 npx playwright install chromium
 node screenshot.cjs
 
-# Akses aplikasi
-# URL  : http://localhost:8005/login
-# User : admin
-# Pass : admin123""")
+# Akses Login
+# Wakil Direktur III (Administrator):
+# Email: wadir3@poliban.ac.id | Pass: admin123
+#
+# Kepala Bagian Akademik (Administrator):
+# Email: kabagakademik@poliban.ac.id | Pass: admin123
+#
+# Ketua UKM Wasi Putih (Pengurus):
+# Email: ketua1@poliban.ac.id | Pass: mahasiswa123
+#
+# Sekretaris UKM Wasi Putih (Pengurus):
+# Email: sekretaris1@poliban.ac.id | Pass: mahasiswa123
+#
+# Ketua UKM Music Generation (Pengurus):
+# Email: ketua2@poliban.ac.id | Pass: mahasiswa123
+#
+# Sekretaris UKM Music Generation (Pengurus):
+# Email: sekretaris2@poliban.ac.id | Pass: mahasiswa123
+#
+# Ketua UKM Basket (Pengurus):
+# Email: ketua3@poliban.ac.id | Pass: mahasiswa123
+#
+# Sekretaris UKM Basket (Pengurus):
+# Email: sekretaris3@poliban.ac.id | Pass: mahasiswa123
+#
+# Anggota UKM (Mahasiswa):
+# Email: anggota1@poliban.ac.id (dan anggota2, anggota3) | Pass: mahasiswa123""")
 
 doc.add_page_break()
 
@@ -471,5 +494,5 @@ add_para("23 Juni 2026", size=10)
 # SAVE
 # ============================================================
 doc.save(DOC)
-print(f"✅ DOCX saved to: {DOC}")
+print(f"SUCCESS: DOCX saved to: {DOC}")
 print(f"   File size: {os.path.getsize(DOC):,} bytes")

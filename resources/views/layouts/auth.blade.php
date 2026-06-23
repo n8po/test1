@@ -9,6 +9,5 @@
 </head>
 <body class="min-h-screen bg-background">
     @yield('content')
-    @blatuiScripts
 </body>
 </html>

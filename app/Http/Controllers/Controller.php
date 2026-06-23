@@ -1,4 +1,19 @@
 <?php
+/**
+ * Module: Controller
+ * Created: 2026-06-23
+ * Author: Raditya Natha Azra
+ * Synopsis: Base Controller class
+ * 
+ * Functions:
+ *   - 
+ * 
+ * Input Parameters:
+ *   - 
+ * 
+ * Return Values:
+ *   - 
+ */
 
 namespace App\Http\Controllers;
 

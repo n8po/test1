@@ -11,7 +11,7 @@
  *   - logout(Request) : redirect -> proses logout
  * 
  * Input Parameters:
- *   - username : string -> username pengguna
+ *   - email : string -> email pengguna
  *   - password : string -> kata sandi
  * 
  * Return Values:
@@ -36,7 +36,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard');
         }
 
-        return back()->withErrors(['username' => 'Username atau password salah']);
+        return back()->withErrors(['email' => 'Email atau password salah']);
     }
 
     public function logout(Request $request)
@@ -55,5 +55,25 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+        
+        $request->validate([
+            'username' => 'required|unique:users,username,' . $user->id,
+            'email' => 'nullable|email',
+            'password' => 'nullable|min:6|confirmed',
+        ]);
+
+        $user->username = $request->username;
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
+        return back()->with('success', 'Profil berhasil diperbarui');
     }
 }
